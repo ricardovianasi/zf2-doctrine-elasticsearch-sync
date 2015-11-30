@@ -29,12 +29,12 @@
   },
   "autoload": {
     "psr-0": {
-      "Zf2DoctrineElasticsearchListener": "src/"
+      "Zf2DoctrineElasticsearchSync": "src/"
     }
   },
   "autoload-dev": {
     "psr-0": {
-      "Zf2DoctrineElasticsearchListenerTest": "tests"
+      "Zf2DoctrineElasticsearchSyncTest": "tests"
     }
   }
 }
