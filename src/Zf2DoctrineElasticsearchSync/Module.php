@@ -8,7 +8,6 @@ use Zend\Loader\StandardAutoloader;
 use Zend\Loader\AutoloaderFactory;
 use Zend\EventManager\EventInterface;
 use Zend\Mvc\MvcEvent;
-use Doctrine\ORM\Event;
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Config;
