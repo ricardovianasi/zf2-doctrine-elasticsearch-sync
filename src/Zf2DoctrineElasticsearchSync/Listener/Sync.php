@@ -186,7 +186,6 @@ class Sync
             // Document will be indexed to my_index/my_type/my_id
             $this->elasticsearchClient->index($params);
         } catch (\Exception $e) {
-            var_dump($e);
             // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
             die('insertEntity is failing');
         }
@@ -214,7 +213,6 @@ class Sync
 
             $response = $this->elasticsearchClient->delete($params);
         } catch (\Exception $e) {
-            var_dump($e);
             // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
             die('deleteEntity is failing');
         }
