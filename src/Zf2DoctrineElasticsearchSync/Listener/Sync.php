@@ -184,7 +184,7 @@ class Sync
             ];
 
             // Document will be indexed to my_index/my_type/my_id
-            $response = $this->elasticsearchClient->index($params);
+            $this->elasticsearchClient->index($params);
         } catch (\Exception $e) {
             var_dump($e);
             // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
