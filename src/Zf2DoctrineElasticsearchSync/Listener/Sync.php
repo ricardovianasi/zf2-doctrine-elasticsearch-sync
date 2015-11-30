@@ -77,7 +77,7 @@ class Sync
     }
 
     /**
-     * @param OnFlushEventArgs $args
+     * @param PostFlushEventArgs $args
      *
      * @author Fabian Köstring
      */
@@ -114,6 +114,7 @@ class Sync
     }
 
     /**
+     * @param string $class
      * @param Config\Config $config
      *
      * @return bool
@@ -156,6 +157,12 @@ class Sync
         return false;
     }
 
+    /**
+     * @param Config\Config $config
+     * @param object $entity
+     * 
+     * @author Fabian Köstring
+     */
     private function insertEntity($config, $entity)
     {
         try {
@@ -189,38 +196,12 @@ class Sync
         }
     }
 
-    private function updateEntity($config, $entity)
-    {
-        die('Use insert Entity instead');
-        try {
-            $body = [];
-            foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
-                if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
-                    if ($elasticsearchProperty == 'id') {
-                        $id = $entity->$method();
-                    }
-                    $body[$elasticsearchProperty] = $entity->$method();
-                } else {
-                    throw new Exception('Can\'t get property ' . $name);
-                }
-            }
-
-            $params = [
-                'index' => $config->get('index'),
-                'type'  => $config->get('type'),
-                'id'    => $id,
-                'body'  => $body
-            ];
-
-            // Document will be indexed to my_index/my_type/my_id
-            $response = $this->elasticsearchClient->index($params);
-        } catch (\Exception $e) {
-            var_dump($e, get_class($e));
-            // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
-            die('updateEntity is failing');
-        }
-    }
-
+    /**
+     * @param Config\Config $config
+     * @param object $entity
+     * 
+     * @author Fabian Köstring
+     */
     private function deleteEntity($config, $entity)
     {
         try {
@@ -258,8 +239,6 @@ class Sync
     }
 
     /**
-     * @param array $scheduledEntityInsertions
-     *
      * @throws Exception
      * @author Fabian Köstring
      */
@@ -278,8 +257,6 @@ class Sync
     }
 
     /**
-     * @param array $scheduledEntityUpdates
-     *
      * @todo   - Fallback, was passiert wenn Dokumenet nicht existiert?
      * @throws Exception
      * @author Fabian Köstring
@@ -299,8 +276,6 @@ class Sync
     }
 
     /**
-     * @param array $scheduledEntityDeletions
-     *
      * @author Fabian Köstring
      */
     private function syncEntityDeletions()
@@ -318,7 +293,7 @@ class Sync
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      * @author Fabian Köstring
