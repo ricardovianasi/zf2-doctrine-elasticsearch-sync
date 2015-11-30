@@ -4,7 +4,6 @@ namespace Zf2DoctrineElasticsearchSync\Listener;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\Events;
 use Zend\Config;
 use \ReflectionClass;
 use \ReflectionProperty;
