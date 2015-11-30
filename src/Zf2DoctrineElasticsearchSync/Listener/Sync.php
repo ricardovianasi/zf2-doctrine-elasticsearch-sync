@@ -82,9 +82,6 @@ class Sync
      */
     public function postFlush(PostFlushEventArgs $args)
     {
-        $entitiyManager = $args->getEntityManager();
-        $unitOfWork = $entitiyManager->getUnitOfWork();
-
         $this->syncEntityInsertions();
     }
 
@@ -244,14 +241,11 @@ class Sync
     private function syncEntityInsertions()
     {
         foreach ($this->inserts as $scheduledEntity) {
-            //if ($this->shouldSync(get_class($scheduledEntity))) {
-            /** @var Config\Config $scheduledEntityConfig */
             $scheduledEntityConfig = $this->config->get(get_class($scheduledEntity));
             if (!$this->elasticsearchTypeExists($scheduledEntityConfig)) {
                 $this->elasticsearchCreateType(get_class($scheduledEntity), $scheduledEntityConfig);
             }
             $this->insertEntity($scheduledEntityConfig, $scheduledEntity);
-            //}
         }
     }
 
@@ -263,14 +257,11 @@ class Sync
     private function syncEntityUpdates()
     {
         foreach ($this->updates as $scheduledEntity) {
-            //if ($this->shouldSync(get_class($scheduledEntity))) {
-            /** @var Config\Config $scheduledEntityConfig */
             $scheduledEntityConfig = $this->config->get(get_class($scheduledEntity));
             if (!$this->elasticsearchTypeExists($scheduledEntityConfig)) {
                 $this->elasticsearchCreateType(get_class($scheduledEntity), $scheduledEntityConfig);
             }
             $this->insertEntity($scheduledEntityConfig, $scheduledEntity);
-            //}
         }
     }
 
@@ -280,14 +271,11 @@ class Sync
     private function syncEntityDeletions()
     {
         foreach ($this->deletions as $scheduledEntity) {
-            //if ($this->shouldSync(get_class($scheduledEntity))) {
-            /** @var Config\Config $scheduledEntityConfig */
             $scheduledEntityConfig = $this->config->get(get_class($scheduledEntity));
             if (!$this->elasticsearchTypeExists($scheduledEntityConfig)) {
                 $this->elasticsearchCreateType(get_class($scheduledEntity), $scheduledEntityConfig);
             }
             $this->deleteEntity($scheduledEntityConfig, $scheduledEntity);
-            //}
         }
     }
 
