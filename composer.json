@@ -1,0 +1,40 @@
+{
+  "name": "fabiankoestring/zf2-doctrine-elasticsearch-sync",
+  "description": "",
+  "license": "MIT",
+  "type": "library",
+  "keywords": [
+    "elasticsearch",
+    "doctrine",
+    "zf2",
+    "zend framework 2"
+  ],
+  "homepage": "https://github.com/FabianKoestring/zf2-doctrine-elasticsearch-sync",
+  "authors": [
+    {
+      "name": "Fabian Köstring",
+      "email": "fabian.koestring@googlemail.com",
+      "homepage": "http://theabstract.de"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "elasticsearch/elasticsearch": "~2.0",
+    "doctrine/doctrine-orm-module": "~0.9"
+  },
+  "require-dev": {
+    "zendframework/zendframework": "2.*",
+    "phpunit/phpunit": "~4.0",
+    "squizlabs/php_codesniffer": "1.5.*"
+  },
+  "autoload": {
+    "psr-0": {
+      "Zf2DoctrineElasticsearchListener": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-0": {
+      "Zf2DoctrineElasticsearchListenerTest": "tests"
+    }
+  }
+}
