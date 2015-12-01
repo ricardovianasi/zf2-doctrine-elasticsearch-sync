@@ -115,10 +115,19 @@ class Sync
     {
         $properties = [];
         foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
-            $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute);
-            $properties[$elasticsearchProperty] = [
-                'type' => $propertyColumnAnnotation->type
-            ];
+            if (!$classAttribute instanceof \Traversable) {
+                $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute);
+                $properties[$elasticsearchProperty] = [
+                    'type' => $propertyColumnAnnotation->type
+                ];
+            } else {
+                /** @var Config\Config $classAttribute */
+                $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute->get('attribute'));
+                $properties[$elasticsearchProperty] = array_merge(
+                    ['type' => $propertyColumnAnnotation->type],
+                    $classAttribute->get('properties')->toArray()
+                );
+            }
         }
 
         $params = [
@@ -148,14 +157,25 @@ class Sync
         $id = uniqid();
         $body = [];
         foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
-
-            if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
-                if ($elasticsearchProperty == 'id') {
-                    $id = $entity->$method();
+            if (!$classAttribute instanceof \Traversable) {
+                if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
+                    if ($elasticsearchProperty == 'id') {
+                        $id = $entity->$method();
+                    }
+                    $body[$elasticsearchProperty] = $entity->$method();
+                } else {
+                    throw new Exception('Can\'t get property ' . $name);
                 }
-                $body[$elasticsearchProperty] = $entity->$method();
             } else {
-                throw new Exception('Can\'t get property ' . $name);
+                /** @var Config\Config $classAttribute */
+                if (method_exists($entity, $method = ('get' . ucfirst($classAttribute->get('attribute'))))) {
+                    if ($elasticsearchProperty == 'id') {
+                        $id = $entity->$method();
+                    }
+                    $body[$elasticsearchProperty] = $entity->$method();
+                } else {
+                    throw new Exception('Can\'t get property ' . $name);
+                }
             }
         }
 
