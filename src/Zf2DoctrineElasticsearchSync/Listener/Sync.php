@@ -94,128 +94,102 @@ class Sync
      */
     private function elasticsearchTypeExists(Config\Config $config)
     {
-        try {
-            $params = [
-                'index' => $config->get('index'),
-                'type'  => $config->get('type')
-            ];
-            if ($this->elasticsearchClient->indices()->existsType($params)) {
-                return true;
-            }
-        } catch (\Exception $e) {
-            // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
-            die('createElasticsearchTypeExistsParams is failing. Maybe missing Parameter.');
+        $params = [
+            'index' => $config->get('index'),
+            'type'  => $config->get('type')
+        ];
+        if ($this->elasticsearchClient->indices()->existsType($params)) {
+            return true;
         }
+
         return false;
     }
 
     /**
-     * @param string $class
+     * @param string        $class
      * @param Config\Config $config
      *
-     * @return bool
      * @author Fabian Köstring
      */
     private function elasticsearchCreateType($class, Config\Config $config)
     {
-        try {
-            $properties = [];
-            foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
-                $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute);
-                $properties[$elasticsearchProperty] = [
-                    'type' => $propertyColumnAnnotation->type
-                ];
-            }
+        $properties = [];
+        foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
+            $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute);
+            $properties[$elasticsearchProperty] = [
+                'type' => $propertyColumnAnnotation->type
+            ];
+        }
 
-            $params = [
-                'index' => $config->get('index'),
-                'body'  => [
-                    'mappings' => [
-                        $config->get('type') => [
-                            '_source'    => [
-                                'enabled' => true,
-                            ],
-                            'properties' => $properties
-                        ]
+        $params = [
+            'index' => $config->get('index'),
+            'body'  => [
+                'mappings' => [
+                    $config->get('type') => [
+                        '_source'    => [
+                            'enabled' => true,
+                        ],
+                        'properties' => $properties
                     ]
                 ]
-            ];
-            //echo "<pre>";
-            //print_r($params);
-            //echo "</pre>";
-            //die();
-            $response = $this->elasticsearchClient->indices()->create($params);
-            return true;
-        } catch (\Exception $e) {
-            // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
-            die('elasticsearchCreateType is failing. Maybe missing Parameter.');
-        }
-        return false;
+            ]
+        ];
+        $this->elasticsearchClient->indices()->create($params);
     }
 
     /**
      * @param Config\Config $config
-     * @param object $entity
-     * 
+     * @param object        $entity
+     *
      * @author Fabian Köstring
      */
     private function insertEntity($config, $entity)
     {
-        try {
-            $id = uniqid();
-            $body = [];
-            foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
+        $id = uniqid();
+        $body = [];
+        foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
 
-                if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
-                    if ($elasticsearchProperty == 'id') {
-                        $id = $entity->$method();
-                    }
-                    $body[$elasticsearchProperty] = $entity->$method();
-                } else {
-                    throw new Exception('Can\'t get property ' . $name);
+            if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
+                if ($elasticsearchProperty == 'id') {
+                    $id = $entity->$method();
                 }
+                $body[$elasticsearchProperty] = $entity->$method();
+            } else {
+                throw new Exception('Can\'t get property ' . $name);
             }
-
-            $params = [
-                'index' => $config->get('index'),
-                'type'  => $config->get('type'),
-                'id'    => $id,
-                'body'  => $body
-            ];
-
-            // Document will be indexed to my_index/my_type/my_id
-            $this->elasticsearchClient->index($params);
-        } catch (\Exception $e) {
-            // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
-            die('insertEntity is failing');
         }
+
+        $params = [
+            'index' => $config->get('index'),
+            'type'  => $config->get('type'),
+            'id'    => $id,
+            'body'  => $body
+        ];
+
+        // Document will be indexed to my_index/my_type/my_id
+        $this->elasticsearchClient->index($params);
     }
 
     /**
      * @param Config\Config $config
-     * @param object $entity
-     * 
+     * @param object        $entity
+     *
      * @author Fabian Köstring
      */
     private function deleteEntity($config, $entity)
     {
-        try {
-            $classAttribute = $config->get('mapping')->get('id');
-            if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
-                $id = $entity->$method();
-            }
-
-            $params = [
-                'index' => $config->get('index'),
-                'type'  => $config->get('type'),
-                'id'    => $id
-            ];
-
-            $response = $this->elasticsearchClient->delete($params);
-        } catch (\Exception $e) {
-            // @todo - Hier müssen genauere Fehlermeldungen rausgehauen werden. Was fehlt denn? Return false
-            die('deleteEntity is failing');
+        $classAttribute = $config->get('mapping')->get('id');
+        if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
+            $id = $entity->$method();
         }
+
+        $params = [
+            'index' => $config->get('index'),
+            'type'  => $config->get('type'),
+            'id'    => $id
+        ];
+
+        $this->elasticsearchClient->delete($params);
     }
 
     /**
