@@ -8,7 +8,6 @@ use Zend\Loader\StandardAutoloader;
 use Zend\Loader\AutoloaderFactory;
 use Zend\EventManager\EventInterface;
 use Zend\Mvc\MvcEvent;
-use Doctrine\ORM\Event;
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Config;
@@ -55,16 +54,18 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Bo
      */
     public function onDispatch(EventInterface $event)
     {
-        /** @var ServiceManager $serviceManager */
-        $serviceManager = $event->getApplication()->getServiceManager();
-        /** @var ORM\EntityManager $entityManager */
-        $entityManager = $serviceManager->get(ORM\EntityManager::class);
-        /** @var Common\EventManager $eventManager */
-        $eventManager = $entityManager->getEventManager();
+        if ($event instanceof MvcEvent) {
+            /** @var ServiceManager $serviceManager */
+            $serviceManager = $event->getApplication()->getServiceManager();
+            /** @var ORM\EntityManager $entityManager */
+            $entityManager = $serviceManager->get(ORM\EntityManager::class);
+            /** @var Common\EventManager $eventManager */
+            $eventManager = $entityManager->getEventManager();
 
-        $config = $serviceManager->get('Config');
-        $zf2DoctrineElasticsearchSyncConfig = new Config\Config($config['zf2-doctrine-elasticsearch-sync']);
-        $eventManager->addEventListener([ORM\Events::onFlush, ORM\Events::postFlush], new Listener\Sync($zf2DoctrineElasticsearchSyncConfig));
+            $config = $serviceManager->get('Config');
+            $zf2DoctrineElasticsearchSyncConfig = new Config\Config($config['zf2-doctrine-elasticsearch-sync']);
+            $eventManager->addEventListener([ORM\Events::onFlush, ORM\Events::postFlush], new Listener\Sync($zf2DoctrineElasticsearchSyncConfig));
+        }
     }
 
     /**
@@ -74,14 +75,16 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Bo
      */
     public function onBootstrap(EventInterface $event)
     {
-        /** @var ServiceManager $serviceManager */
-        $serviceManager = $event->getApplication()->getServiceManager();
-        $config = $serviceManager->get('Config');
+        if ($event instanceof MvcEvent) {
+            /** @var ServiceManager $serviceManager */
+            $serviceManager = $event->getApplication()->getServiceManager();
+            $config = $serviceManager->get('Config');
 
-        if (isset($config['zf2-doctrine-elasticsearch-sync']) && !empty($config['zf2-doctrine-elasticsearch-sync'])) {
-            /** @var EventManager $eventManager */
-            $eventManager = $event->getTarget()->getEventManager();
-            $eventManager->attach(MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 999999);
+            if (isset($config['zf2-doctrine-elasticsearch-sync']) && !empty($config['zf2-doctrine-elasticsearch-sync'])) {
+                /** @var EventManager $eventManager */
+                $eventManager = $event->getTarget()->getEventManager();
+                $eventManager->attach(MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 999999);
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 before_commands:
     - "composer install --dev --prefer-source"
 
+build_failure_conditions:
+    - 'issues.label("coding-style").exists'
+
 tools:
     php_code_coverage:
         enabled: true
