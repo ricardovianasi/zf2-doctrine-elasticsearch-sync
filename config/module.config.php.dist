@@ -1,0 +1,108 @@
+<?php
+
+return [
+    'zf2-doctrine-elasticsearch-sync' => [
+        Entity\Ansprechpartner::class => [
+            'index'  => 'my_ansprechpartner_index22',
+            'type'   => 'my_ansprechpartner_type',
+            'fields' => [
+                'id'       => [
+                    'mapping'  => [
+                        'type' => 'numeric'
+                    ],
+                    'indexing' => [
+                        'attribute' => 'id'
+                    ]
+                ],
+                'vorname'  => [
+                    'mapping'  => [
+                        'type'       => 'string',
+                        'parameters' => [
+                            //'analyzer'               => '',
+                            //'boost'                  => '',
+                            //'doc_values'             => '',
+                            //'fielddata'              => '',
+                            //'fields'                 => '',
+                            //'ignore_above'           => '',
+                            //'include_in_all'         => '',
+                            //'index'                  => '',
+                            //'index_options'          => '',
+                            //'norms'                  => '',
+                            //'null_value'             => '',
+                            //'position_increment_gap' => '',
+                            //'store'                  => '',
+                            //'search_analyzer'        => '',
+                            //'similarity'             => '',
+                            //'term_vector'            => ''
+                        ]
+                    ],
+                    'indexing' => [
+                        'attribute' => 'vorname'
+                    ]
+                ],
+                'nachname' => [
+                    'mapping'  => [
+                        'type' => 'string',
+                    ],
+                    'indexing' => [
+                        'attribute' => 'nachname'
+                    ]
+                ],
+                'suggest'  => [
+                    'mapping'  => [
+                        'type'       => 'completion',
+                        'parameters' => [
+                            'analyzer'        => 'simple',
+                            'search_analyzer' => 'simple',
+                            'payloads'        => true
+                        ]
+                    ],
+                    'indexing' => [
+                        'input'   => [
+                            'attributes' => [
+                                'vorname',
+                                'nachname'
+                            ]
+                        ],
+                        'output'  => [
+                            'modifier' => [
+                                'sprintf' => [
+                                    '(%s) %s %s',
+                                    [
+                                        'id',
+                                        'vorname',
+                                        'nachname'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'payload' => [
+                            'id' => 'id'
+                        ],
+                        'weight'  => rand(10, 20)
+                    ]
+                ],
+                'suggest2' => [
+                    'mapping'  => [
+                        'type'       => 'completion',
+                        'parameters' => [
+                            'analyzer'        => 'simple',
+                            'search_analyzer' => 'simple',
+                            'payloads'        => true
+                        ]
+                    ],
+                    'indexing' => [
+                        'input'   => [
+                            'attribute' => 'vorname'
+                        ],
+                        'output'  => 'output',
+                        'payload' => [
+                            'id' => 'id'
+                        ],
+                        'weight'  => rand(10, 20)
+                    ]
+                ]
+            ]
+        ]
+    ]
+];

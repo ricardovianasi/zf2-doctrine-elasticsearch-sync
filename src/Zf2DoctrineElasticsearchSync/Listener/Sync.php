@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Zend\Config;
 use \ReflectionClass;
 use \ReflectionProperty;
+use Zf2DoctrineElasticsearchSync\Exception;
 
 /**
  * Class Sync
@@ -32,6 +33,12 @@ class Sync
     private $updates = [];
 
     /**
+     * @todo - object, nested, geo_point, geo_shape
+     * @var array $mappingTypes
+     */
+    private $mappingTypes = ['string', 'date', 'long', 'double', 'boolean', 'ip', 'completion'];
+
+    /**
      * OnFlush constructor.
      *
      * @param Config\Config $config
@@ -49,7 +56,6 @@ class Sync
      */
     public function onFlush(OnFlushEventArgs $args)
     {
-
         $entitiyManager = $args->getEntityManager();
         $unitOfWork = $entitiyManager->getUnitOfWork();
 
@@ -106,7 +112,7 @@ class Sync
     }
 
     /**
-     * @param string        $class
+     * @param               $class
      * @param Config\Config $config
      *
      * @author Fabian Köstring
@@ -114,19 +120,34 @@ class Sync
     private function elasticsearchCreateType($class, Config\Config $config)
     {
         $properties = [];
-        foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
-            if (!$classAttribute instanceof \Traversable) {
-                $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute);
-                $properties[$elasticsearchProperty] = [
-                    'type' => $propertyColumnAnnotation->type
-                ];
-            } else {
-                /** @var Config\Config $classAttribute */
-                $propertyColumnAnnotation = $this->getPropertyColumnAnnotation($class, $classAttribute->get('attribute'));
-                $properties[$elasticsearchProperty] = array_merge(
-                    ['type' => $propertyColumnAnnotation->type],
-                    $classAttribute->get('properties')->toArray()
-                );
+        /**
+         * @var $elasticsearchProperty String
+         * @var $fieldConfig           Config\Config
+         */
+        foreach ($config->get('fields') as $elasticsearchProperty => $fieldConfig) {
+            if ($elasticsearchProperty != 'id') {
+                if ($fieldConfig->offsetExists('mapping')) {
+                    $fieldMapping = $fieldConfig->offsetGet('mapping');
+                    if ($fieldMapping->offsetExists('type')) {
+                        $fieldType = $fieldMapping->offsetGet('type');
+                        if (!is_string($fieldType) || !in_array($fieldType, $this->mappingTypes)) {
+                            throw new Exception\InvalidArgumentException(
+                                sprintf(
+                                    '%s: expects type of (\'%s\'), received "%s"',
+                                    __METHOD__,
+                                    implode("','", $this->mappingTypes),
+                                    (is_object($fieldType) ? get_class($fieldType) : $fieldType)
+                                )
+                            );
+                        }
+
+                        if ($fieldMapping->offsetExists('parameters')) {
+                            $fieldParameters = $fieldMapping->offsetGet('parameters');
+                        }
+
+                        $properties[$elasticsearchProperty] = array_merge(['type' => $fieldType], $fieldParameters->toArray());
+                    }
+                }
             }
         }
 
@@ -143,6 +164,9 @@ class Sync
                 ]
             ]
         ];
+
+        //var_dump($params);die();
+
         $this->elasticsearchClient->indices()->create($params);
     }
 
@@ -154,37 +178,118 @@ class Sync
      */
     private function insertEntity($config, $entity)
     {
-        $id = uniqid();
+
+        $id = null;
         $body = [];
-        foreach ($config->get('mapping') as $elasticsearchProperty => $classAttribute) {
-            if (!$classAttribute instanceof \Traversable) {
-                if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
-                    if ($elasticsearchProperty == 'id') {
-                        $id = $entity->$method();
-                    }
-                    $body[$elasticsearchProperty] = $entity->$method();
-                } else {
-                    throw new Exception('Can\'t get property ' . $name);
+        foreach ($config->get('fields') as $elasticsearchProperty => $fieldConfig) {
+            if ($fieldConfig->offsetExists('mapping')) {
+                $fieldMapping = $fieldConfig->offsetGet('mapping');
+                if ($fieldMapping->offsetExists('type')) {
+                    $fieldType = $fieldMapping->offsetGet('type');
                 }
-            } else {
-                /** @var Config\Config $classAttribute */
-                if (method_exists($entity, $method = ('get' . ucfirst($classAttribute->get('attribute'))))) {
-                    if ($elasticsearchProperty == 'id') {
-                        $id = $entity->$method();
+            }
+            if ($fieldConfig->offsetExists('indexing')) {
+                $fieldIndexing = $fieldConfig->offsetGet('indexing');
+                if ($fieldType && $fieldType == 'completion') {
+                    if ($fieldIndexing->offsetExists('input')) {
+                        $completionInput = $fieldIndexing->offsetGet('input');
+                        if ($completionInput->offsetExists('attribute')) {
+                            $attribute = $completionInput->offsetGet('attribute');
+                            if (method_exists($entity, $method = ('get' . ucfirst($attribute)))) {
+                                $body[$elasticsearchProperty]['input'] = $entity->$method();
+                            } else {
+                                throw new Exception\InvalidArgumentException(
+                                    sprintf(
+                                        '%s: Entity of type "%s" has no method "%s()"',
+                                        __METHOD__,
+                                        get_class($entity),
+                                        $method
+                                    )
+                                );
+                            }
+                        } elseif ($completionInput->offsetExists('attributes')) {
+                            $attributes = $completionInput->offsetGet('attributes');
+                            foreach ($attributes as $attribute) {
+                                if (method_exists($entity, $method = ('get' . ucfirst($attribute)))) {
+                                    $body[$elasticsearchProperty]['input'][] = $entity->$method();
+                                } else {
+                                    throw new Exception\InvalidArgumentException(
+                                        sprintf(
+                                            '%s: Entity of type "%s" has no method "%s()"',
+                                            __METHOD__,
+                                            get_class($entity),
+                                            $method
+                                        )
+                                    );
+                                }
+                            }
+                            //var_dump($elasticsearchProperty, $attributes);
+                            //die('multi attributes');
+                        }
+                        //var_dump($completionInput);
                     }
-                    $body[$elasticsearchProperty] = $entity->$method();
+                    if ($fieldIndexing->offsetExists('output')) {
+                        $completionOutput = $fieldIndexing->offsetGet('output');
+                        if ($completionOutput instanceof \Traversable && $completionOutput->offsetExists('modifier')) {
+                            $modifier = $completionOutput->offsetGet('modifier');
+                            if ($modifier->offsetExists('sprintf')) {
+                                $sprintfModifier = $modifier->offsetGet('sprintf')->toArray();
+                                $modifierAttributes = [];
+                                foreach ($sprintfModifier[1] as $modifierAttribute) {
+                                    if (method_exists($entity, $method = ('get' . ucfirst($modifierAttribute)))) {
+                                        $modifierAttributes[] = $entity->$method();
+                                    } else {
+                                        throw new Exception\InvalidArgumentException(
+                                            sprintf(
+                                                '%s: Entity of type "%s" has no method "%s()"',
+                                                __METHOD__,
+                                                get_class($entity),
+                                                $method
+                                            )
+                                        );
+                                    }
+                                }
+                                //var_dump($sprintfModifier, vsprintf($sprintfModifier[0], $modifierAttributes));die();
+                                $body[$elasticsearchProperty]['output'] = vsprintf($sprintfModifier[0], $modifierAttributes);
+                            }
+                        }
+                    }
                 } else {
-                    throw new Exception('Can\'t get property ' . $name);
+                    if ($fieldIndexing->offsetExists('attribute')) {
+                        $fieldIndexingAttribute = $fieldIndexing->offsetGet('attribute');
+                        if (method_exists($entity, $method = ('get' . ucfirst($fieldIndexingAttribute)))) {
+                            if ($elasticsearchProperty == 'id') {
+                                $id = $entity->$method();
+                            } else {
+                                $body[$elasticsearchProperty] = $entity->$method();
+                            }
+                        } else {
+                            throw new Exception\InvalidArgumentException(
+                                sprintf(
+                                    '%s: Entity of type "%s" has no method "%s()"',
+                                    __METHOD__,
+                                    get_class($entity),
+                                    $method
+                                )
+                            );
+                        }
+                    }
                 }
             }
         }
 
+        //var_dump($body);
+        //die("INSERT");
+
         $params = [
             'index' => $config->get('index'),
             'type'  => $config->get('type'),
-            'id'    => $id,
             'body'  => $body
         ];
+
+        if (!is_null($id)) {
+            $params['id'] = $id;
+        }
 
         // Document will be indexed to my_index/my_type/my_id
         $this->elasticsearchClient->index($params);
