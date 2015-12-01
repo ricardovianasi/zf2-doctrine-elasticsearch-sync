@@ -196,7 +196,7 @@ class Sync
      * @param $class
      * @param $property
      *
-     * @return \Doctrine\ORM\Mapping\Column
+     * @return object|\Doctrine\ORM\Mapping\Column
      * @author Fabian Köstring
      */
     private function getPropertyColumnAnnotation($class, $property)
