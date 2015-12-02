@@ -45,7 +45,7 @@ class Sync extends AbstractOptions
      */
     public function hasEntity($entity)
     {
-        if (array_key_exists($entity, $this->getEntities())) {
+        if ($this->getEntities() && array_key_exists($entity, $this->getEntities())) {
             return true;
         }
         return false;

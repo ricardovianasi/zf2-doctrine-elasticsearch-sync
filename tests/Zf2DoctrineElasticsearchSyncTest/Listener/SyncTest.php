@@ -27,7 +27,7 @@ class SyncTest extends PHPUnit_Framework_TestCase
     public function testOnFlushWithNoSyncedMatch()
     {
         $elasticsearchClient = $this->getMock(Elasticsearch\Client::class, [], [], '', false);
-        $sync = new Listener\Sync(new Option\Sync(), $elasticsearchClient);
+        $sync = new Listener\Sync(new Option\Sync([]), $elasticsearchClient);
 
         $unitOfWork = $this->getMock(
             UnitOfWork::class,
