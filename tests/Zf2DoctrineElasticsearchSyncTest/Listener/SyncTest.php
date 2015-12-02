@@ -9,6 +9,7 @@ use Zend\Config;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use Elasticsearch;
 
 /**
  * Class SyncTest
@@ -32,7 +33,8 @@ class SyncTest extends PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        $sync = new Listener\Sync($config);
+        $elasticsearchClient = $this->getMock(Elasticsearch\Client::class, [], [], '', false);
+        $sync = new Listener\Sync($config, $elasticsearchClient);
 
         $unitOfWork = $this->getMock(
             UnitOfWork::class,
