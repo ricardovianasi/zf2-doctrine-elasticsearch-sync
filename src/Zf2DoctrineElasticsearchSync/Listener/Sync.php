@@ -8,6 +8,7 @@ use Zend\Config;
 use \ReflectionClass;
 use \ReflectionProperty;
 use Zf2DoctrineElasticsearchSync\Exception;
+use Zf2DoctrineElasticsearchSync\Option;
 use Elasticsearch;
 
 /**
@@ -18,8 +19,8 @@ use Elasticsearch;
  */
 class Sync
 {
-    /** Config\Config $config */
-    private $config;
+    /** Option\Sync $options */
+    private $options;
 
     /** @var Elasticsearch\Client $elasticsearchClient */
     private $elasticsearchClient;
@@ -34,19 +35,13 @@ class Sync
     private $updates = [];
 
     /**
-     * @todo - object, nested, geo_point, geo_shape
-     * @var array $mappingTypes
-     */
-    private $mappingTypes = ['string', 'date', 'long', 'double', 'boolean', 'ip', 'completion'];
-
-    /**
      * OnFlush constructor.
      *
-     * @param Config\Config $config
+     * @param Option\Sync $options
      */
-    public function __construct(Config\Config $config, Elasticsearch\Client $elasticsearchClient)
+    public function __construct(Option\Sync $options, Elasticsearch\Client $elasticsearchClient)
     {
-        $this->config = $config;
+        $this->options = $options;
         $this->elasticsearchClient = $elasticsearchClient;
     }
 
@@ -61,19 +56,19 @@ class Sync
         $unitOfWork = $entitiyManager->getUnitOfWork();
 
         foreach ($unitOfWork->getScheduledEntityInsertions() as $scheduledEntity) {
-            if ($this->shouldSync(get_class($scheduledEntity))) {
+            if ($this->options->hasEntity(get_class($scheduledEntity))) {
                 $this->inserts[] = $scheduledEntity;
             }
         }
 
         foreach ($unitOfWork->getScheduledEntityDeletions() as $scheduledEntity) {
-            if ($this->shouldSync(get_class($scheduledEntity))) {
+            if ($this->options->hasEntity(get_class($scheduledEntity))) {
                 $this->deletions[] = $scheduledEntity;
             }
         }
 
         foreach ($unitOfWork->getScheduledEntityUpdates() as $scheduledEntity) {
-            if ($this->shouldSync(get_class($scheduledEntity))) {
+            if ($this->options->hasEntity(get_class($scheduledEntity))) {
                 $this->updates[] = $scheduledEntity;
             }
         }
@@ -92,18 +87,17 @@ class Sync
         $this->syncEntityInsertions();
     }
 
-
     /**
-     * @param Config\Config $config
+     * @param Option\Entity $entityOptions
      *
      * @return bool
      * @author Fabian Köstring
      */
-    private function elasticsearchTypeExists(Config\Config $config)
+    private function elasticsearchTypeExists(Option\Entity $entityOptions)
     {
         $params = [
-            'index' => $config->get('index'),
-            'type'  => $config->get('type')
+            'index' => $entityOptions->getIndex(),
+            'type'  => $entityOptions->getType()
         ];
         if ($this->elasticsearchClient->indices()->existsType($params)) {
             return true;
@@ -114,17 +108,42 @@ class Sync
 
     /**
      * @param               $class
-     * @param Config\Config $config
+     * @param Option\Entity $entityOptions
      *
      * @author Fabian Köstring
+     * @todo   throw Exception if $properties is empty. No mapping processed.
      */
-    private function elasticsearchCreateType($class, Config\Config $config)
+    private function elasticsearchCreateType($class, Option\Entity $entityOptions)
     {
         $properties = [];
-        /**
-         * @var $elasticsearchProperty String
-         * @var $fieldConfig           Config\Config
-         */
+        foreach ($entityOptions->getFields() as $property => $entityOption) {
+            if ($property != 'id' && $entityOption->getMapping()) {
+                $mapping = $entityOption->getMapping();
+                $properties[$property] = array_merge(['type' => $mapping->getType()], $mapping->getParameters());
+            }
+        }
+
+        $params = [
+            'index' => $entityOptions->getIndex(),
+            'body'  => [
+                'mappings' => [
+                    $entityOptions->getType() => [
+                        '_source'    => [
+                            'enabled' => true,
+                        ],
+                        'properties' => $properties
+                    ]
+                ]
+            ]
+        ];
+
+        //echo "<pre>";
+        //print_r($params);
+        //echo "</pre>";
+
+        $this->elasticsearchClient->indices()->create($params);
+
+        /*
         foreach ($config->get('fields') as $elasticsearchProperty => $fieldConfig) {
             if ($elasticsearchProperty != 'id') {
                 if ($fieldConfig->offsetExists('mapping')) {
@@ -169,17 +188,49 @@ class Sync
         //var_dump($params);die();
 
         $this->elasticsearchClient->indices()->create($params);
+        */
     }
 
-    /**
-     * @param Config\Config $config
-     * @param object        $entity
-     *
-     * @author Fabian Köstring
-     */
-    private function insertEntity($config, $entity)
+    private function insertEntity($entity, Option\Entity $entityOptions)
     {
+        $id = null;
+        $body = [];
+        foreach ($entityOptions->getFields() as $property => $entityOption) {
+            if ($entityOption->getIndexing()) {
+                $indexing = $entityOption->getIndexing();
+                if (method_exists($entity, $method = ('get' . ucfirst($indexing->getAttribute())))) {
+                    if ($property == 'id') {
+                        $id = $entity->$method();
+                    } else {
+                        $body[$property] = $entity->$method();
+                    }
+                } else {
+                    throw new Exception\InvalidArgumentException(
+                        sprintf(
+                            '%s: Entity of type "%s" has no method "%s()"',
+                            __METHOD__,
+                            get_class($entity),
+                            $method
+                        )
+                    );
+                }
+            }
+        }
 
+        $params = [
+            'index' => $entityOptions->getIndex(),
+            'type'  => $entityOptions->getType(),
+            'body'  => $body
+        ];
+
+        if (!is_null($id)) {
+            $params['id'] = $id;
+        }
+
+        $this->elasticsearchClient->index($params);
+
+
+        /*
         $id = null;
         $body = [];
         foreach ($config->get('fields') as $elasticsearchProperty => $fieldConfig) {
@@ -294,42 +345,32 @@ class Sync
 
         // Document will be indexed to my_index/my_type/my_id
         $this->elasticsearchClient->index($params);
+        */
     }
 
     /**
-     * @param Config\Config $config
-     * @param object        $entity
+     * @param               $entity
+     * @param Option\Entity $entityOptions
      *
      * @author Fabian Köstring
+     * @todo   throw exception if id could not found
      */
-    private function deleteEntity($config, $entity)
+    private function deleteEntity($entity, Option\Entity $entityOptions)
     {
-        $classAttribute = $config->get('mapping')->get('id');
-        if (method_exists($entity, $method = ('get' . ucfirst($classAttribute)))) {
+        $id = $entityOptions->getField('id');
+        $indexing = $id->getIndexing();
+
+        if (method_exists($entity, $method = ('get' . ucfirst($indexing->getAttribute())))) {
             $id = $entity->$method();
         }
 
         $params = [
-            'index' => $config->get('index'),
-            'type'  => $config->get('type'),
+            'index' => $entityOptions->getIndex(),
+            'type'  => $entityOptions->getType(),
             'id'    => $id
         ];
 
         $this->elasticsearchClient->delete($params);
-    }
-
-    /**
-     * @param $class
-     * @param $property
-     *
-     * @return object|\Doctrine\ORM\Mapping\Column
-     * @author Fabian Köstring
-     */
-    private function getPropertyColumnAnnotation($class, $property)
-    {
-        $annotationReader = new AnnotationReader();
-        $reflectionProperty = new ReflectionProperty($class, $property);
-        return $annotationReader->getPropertyAnnotation($reflectionProperty, 'Doctrine\ORM\Mapping\Column');
     }
 
     /**
@@ -339,27 +380,25 @@ class Sync
     private function syncEntityInsertions()
     {
         foreach ($this->inserts as $scheduledEntity) {
-            $scheduledEntityConfig = $this->config->get(get_class($scheduledEntity));
-            if (!$this->elasticsearchTypeExists($scheduledEntityConfig)) {
-                $this->elasticsearchCreateType(get_class($scheduledEntity), $scheduledEntityConfig);
+            $entityOptions = $this->options->getEntity(get_class($scheduledEntity));
+            if (!$this->elasticsearchTypeExists($entityOptions)) {
+                $this->elasticsearchCreateType(get_class($scheduledEntity), $entityOptions);
             }
-            $this->insertEntity($scheduledEntityConfig, $scheduledEntity);
+            $this->insertEntity($scheduledEntity, $entityOptions);
         }
     }
 
     /**
-     * @todo   - Fallback, was passiert wenn Dokumenet nicht existiert?
-     * @throws Exception
      * @author Fabian Köstring
+     * @todo   Call update not insert?
      */
     private function syncEntityUpdates()
     {
         foreach ($this->updates as $scheduledEntity) {
-            $scheduledEntityConfig = $this->config->get(get_class($scheduledEntity));
-            if (!$this->elasticsearchTypeExists($scheduledEntityConfig)) {
-                $this->elasticsearchCreateType(get_class($scheduledEntity), $scheduledEntityConfig);
+            $entityOptions = $this->options->getEntity(get_class($scheduledEntity));
+            if ($this->elasticsearchTypeExists($entityOptions)) {
+                $this->insertEntity($scheduledEntity, $entityOptions);
             }
-            $this->insertEntity($scheduledEntityConfig, $scheduledEntity);
         }
     }
 
@@ -369,25 +408,10 @@ class Sync
     private function syncEntityDeletions()
     {
         foreach ($this->deletions as $scheduledEntity) {
-            $scheduledEntityConfig = $this->config->get(get_class($scheduledEntity));
-            if (!$this->elasticsearchTypeExists($scheduledEntityConfig)) {
-                $this->elasticsearchCreateType(get_class($scheduledEntity), $scheduledEntityConfig);
+            $entityOptions = $this->options->getEntity(get_class($scheduledEntity));
+            if ($this->elasticsearchTypeExists($entityOptions)) {
+                $this->deleteEntity($scheduledEntity, $entityOptions);
             }
-            $this->deleteEntity($scheduledEntityConfig, $scheduledEntity);
         }
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return bool
-     * @author Fabian Köstring
-     */
-    private function shouldSync($key)
-    {
-        if ($this->config->offsetExists($key)) {
-            return true;
-        }
-        return false;
     }
 }

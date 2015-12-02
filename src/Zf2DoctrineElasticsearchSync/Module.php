@@ -14,6 +14,7 @@ use Zend\Config;
 use Doctrine\ORM;
 use Doctrine\Common;
 use Zf2DoctrineElasticsearchSync\Listener;
+use Zf2DoctrineElasticsearchSync\Option;
 
 /**
  * Class Module
@@ -61,11 +62,9 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Bo
             $entityManager = $serviceManager->get(ORM\EntityManager::class);
             /** @var Common\EventManager $eventManager */
             $eventManager = $entityManager->getEventManager();
-
-            $config = $serviceManager->get('Config');
-            $zf2DoctrineElasticsearchSyncConfig = new Config\Config($config['zf2-doctrine-elasticsearch-sync']);
-            $elasticSearchService = $serviceManager->get('zf2-doctrine-elasticsearch-service');
-            $eventManager->addEventListener([ORM\Events::onFlush, ORM\Events::postFlush], new Listener\Sync($zf2DoctrineElasticsearchSyncConfig, $elasticSearchService));
+            /** @var Listener\Sync $listener */
+            $listener = $serviceManager->get(Listener\Sync::class);
+            $eventManager->addEventListener([ORM\Events::onFlush, ORM\Events::postFlush], $listener);
         }
     }
 
