@@ -8,6 +8,7 @@ use Zend\Config;
 use \ReflectionClass;
 use \ReflectionProperty;
 use Zf2DoctrineElasticsearchSync\Exception;
+use Elasticsearch;
 
 /**
  * Class Sync
