@@ -4,6 +4,7 @@ namespace Zf2DoctrineElasticsearchSyncTest;
 use PHPUnit_Framework_TestCase;
 use Zf2DoctrineElasticsearchSync\Module;
 use Zf2DoctrineElasticsearchSync\Listener;
+use Zf2DoctrineElasticsearchSync\Option;
 use Zend\Http\Response;
 use Zend\Http\Request;
 use Zend\EventManager\Event;
@@ -12,6 +13,7 @@ use Zend\Mvc\MvcEvent;
 use Doctrine\ORM;
 use Doctrine\Common;
 use Elasticsearch\ClientBuilder;
+use Elasticsearch;
 
 /**
  * Class ModuleTest
@@ -147,6 +149,8 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testOnDispatch()
     {
+        $elasticsearchClient = $this->getMock(Elasticsearch\Client::class, [], [], '', false);
+        $listener = new Listener\Sync(new Option\Sync(), $elasticsearchClient);
         $eventManager = new Common\EventManager();
         $entityManager = $this->getMock(
             '\Doctrine\ORM\EntityManager',
@@ -165,14 +169,8 @@ class ModuleTest extends PHPUnit_Framework_TestCase
         $serviceManager
             ->expects($this->at(1))
             ->method('get')
-            ->with('Config')
-            ->will($this->returnValue(['zf2-doctrine-elasticsearch-sync' => ['ASD']]));
-        $serviceManager
-            ->expects($this->at(2))
-            ->method('get')
-            ->with('zf2-doctrine-elasticsearch-service')
-            ->will($this->returnValue(ClientBuilder::create()->build()));
-        //
+            ->with(Listener\Sync::class)
+            ->will($this->returnValue($listener));
 
         $application = $this->getMock('Zend\Mvc\ApplicationInterface');
         $application
