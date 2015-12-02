@@ -11,6 +11,7 @@ use Zend\EventManager\EventManager;
 use Zend\Mvc\MvcEvent;
 use Doctrine\ORM;
 use Doctrine\Common;
+use Elasticsearch;
 
 /**
  * Class ModuleTest
@@ -166,6 +167,11 @@ class ModuleTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->with('Config')
             ->will($this->returnValue(['zf2-doctrine-elasticsearch-sync' => ['ASD']]));
+        $serviceManager
+            ->expects($this->at(2))
+            ->method('get')
+            ->with('zf2-doctrine-elasticsearch-service')
+            ->will($this->returnValue(Elasticsearch\ClientBuilder::create()->build()));
 
         $application = $this->getMock('Zend\Mvc\ApplicationInterface');
         $application

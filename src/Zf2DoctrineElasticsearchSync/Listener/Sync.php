@@ -8,6 +8,7 @@ use Zend\Config;
 use \ReflectionClass;
 use \ReflectionProperty;
 use Zf2DoctrineElasticsearchSync\Exception;
+use Elasticsearch;
 
 /**
  * Class Sync
@@ -43,10 +44,10 @@ class Sync
      *
      * @param Config\Config $config
      */
-    public function __construct($config)
+    public function __construct(Config\Config $config, Elasticsearch\Client $elasticsearchClient)
     {
         $this->config = $config;
-        $this->elasticsearchClient = \Elasticsearch\ClientBuilder::create()->setHosts(['127.0.0.1:9200'])->build();
+        $this->elasticsearchClient = $elasticsearchClient;
     }
 
     /**

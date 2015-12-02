@@ -64,7 +64,8 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Bo
 
             $config = $serviceManager->get('Config');
             $zf2DoctrineElasticsearchSyncConfig = new Config\Config($config['zf2-doctrine-elasticsearch-sync']);
-            $eventManager->addEventListener([ORM\Events::onFlush, ORM\Events::postFlush], new Listener\Sync($zf2DoctrineElasticsearchSyncConfig));
+            $elasticSearchService = $serviceManager->get('zf2-doctrine-elasticsearch-service');
+            $eventManager->addEventListener([ORM\Events::onFlush, ORM\Events::postFlush], new Listener\Sync($zf2DoctrineElasticsearchSyncConfig, $elasticSearchService));
         }
     }
 
