@@ -9,7 +9,7 @@ class Mapping extends AbstractOptions
     private $type;
 
     /** @var array $parameters */
-    private $parameters = [];
+    private $parameters;
 
     /**
      * Getter für Attribut parameters

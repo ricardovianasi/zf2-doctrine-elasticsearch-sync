@@ -2,7 +2,20 @@ before_commands:
     - "composer install --dev --prefer-source"
 
 build_failure_conditions:
-    - 'issues.label("coding-style").exists'
+    # No new code elements with rating of D or lower
+    - 'elements.rating(<= D).new.exists'
+
+    # No new issues with severity MAJOR or higher
+    - 'issues.severity(>= MAJOR).new.exists'
+
+    # Minimum code rating: 7
+    - 'project.metric("scrutinizer.quality", < 7)'
+
+    # Minimum code coverage: 70%
+    - 'project.metric("scrutinizer.test_coverage", < 0.70)'
+
+    # Code coverage must not decrease by more than 5%
+    - 'project.metric_change("scrutinizer.test_coverage", < -0.05)'
 
 tools:
     php_code_coverage:
