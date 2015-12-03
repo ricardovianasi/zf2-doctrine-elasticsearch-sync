@@ -1,5 +1,5 @@
 <?php
-namespace Zf2DoctrineElasticsearchSync\Factory;
+namespace Zf2DoctrineElasticsearchSync\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -10,7 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @package Zf2DoctrineElasticsearchSync\Factory
  * @author  Fabian Köstring
  */
-class Elasticsearch implements FactoryInterface
+class ElasticsearchFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator

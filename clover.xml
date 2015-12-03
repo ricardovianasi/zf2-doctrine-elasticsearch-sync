@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1449067033">
+  <project timestamp="1449067033">
+    <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Exception/ExceptionInterface.php">
+      <metrics loc="11" ncloc="6" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="Zf2DoctrineElasticsearchSync\Exception">
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Exception/InvalidArgumentException.php">
+        <class name="InvalidArgumentException" namespace="Zf2DoctrineElasticsearchSync\Exception" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="12" ncloc="6" classes="1" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="Zf2DoctrineElasticsearchSync\Factory">
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Factory/Elasticsearch.php">
+        <class name="Elasticsearch" namespace="Zf2DoctrineElasticsearchSync\Factory" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
+        </class>
+        <line num="21" type="method" name="createService" crap="2" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <metrics loc="25" ncloc="13" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="Zf2DoctrineElasticsearchSync\Listener">
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Listener/Sync.php">
+        <class name="Sync" namespace="Zf2DoctrineElasticsearchSync\Listener" fullPackage="Zf2DoctrineElasticsearchListener" package="Zf2DoctrineElasticsearchListener">
+          <metrics methods="10" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="78" coveredstatements="21" elements="88" coveredelements="23"/>
+        </class>
+        <line num="42" type="method" name="__construct" crap="1" count="2"/>
+        <line num="44" type="stmt" count="2"/>
+        <line num="45" type="stmt" count="2"/>
+        <line num="46" type="stmt" count="2"/>
+        <line num="53" type="method" name="onFlush" crap="7" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="66" type="stmt" count="1"/>
+        <line num="70" type="stmt" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="76" type="stmt" count="1"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="85" type="method" name="postFlush" crap="2" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="96" type="method" name="elasticsearchTypeExists" crap="6" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <line num="116" type="method" name="elasticsearchCreateType" crap="20" count="0"/>
+        <line num="118" type="stmt" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="127" type="stmt" count="0"/>
+        <line num="130" type="stmt" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="0"/>
+        <line num="192" type="stmt" count="0"/>
+        <line num="194" type="method" name="insertEntity" crap="42" count="0"/>
+        <line num="196" type="stmt" count="0"/>
+        <line num="197" type="stmt" count="0"/>
+        <line num="198" type="stmt" count="0"/>
+        <line num="199" type="stmt" count="0"/>
+        <line num="200" type="stmt" count="0"/>
+        <line num="201" type="stmt" count="0"/>
+        <line num="202" type="stmt" count="0"/>
+        <line num="203" type="stmt" count="0"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="208" type="stmt" count="0"/>
+        <line num="210" type="stmt" count="0"/>
+        <line num="211" type="stmt" count="0"/>
+        <line num="221" type="stmt" count="0"/>
+        <line num="222" type="stmt" count="0"/>
+        <line num="223" type="stmt" count="0"/>
+        <line num="226" type="stmt" count="0"/>
+        <line num="227" type="stmt" count="0"/>
+        <line num="230" type="stmt" count="0"/>
+        <line num="349" type="stmt" count="0"/>
+        <line num="358" type="method" name="deleteEntity" crap="6" count="0"/>
+        <line num="360" type="stmt" count="0"/>
+        <line num="361" type="stmt" count="0"/>
+        <line num="363" type="stmt" count="0"/>
+        <line num="364" type="stmt" count="0"/>
+        <line num="368" type="stmt" count="0"/>
+        <line num="369" type="stmt" count="0"/>
+        <line num="370" type="stmt" count="0"/>
+        <line num="373" type="stmt" count="0"/>
+        <line num="374" type="stmt" count="0"/>
+        <line num="380" type="method" name="syncEntityInsertions" crap="12" count="0"/>
+        <line num="382" type="stmt" count="0"/>
+        <line num="383" type="stmt" count="0"/>
+        <line num="384" type="stmt" count="0"/>
+        <line num="385" type="stmt" count="0"/>
+        <line num="387" type="stmt" count="0"/>
+        <line num="389" type="stmt" count="0"/>
+        <line num="395" type="method" name="syncEntityUpdates" crap="4.94" count="1"/>
+        <line num="397" type="stmt" count="1"/>
+        <line num="398" type="stmt" count="0"/>
+        <line num="399" type="stmt" count="0"/>
+        <line num="400" type="stmt" count="0"/>
+        <line num="403" type="stmt" count="1"/>
+        <line num="408" type="method" name="syncEntityDeletions" crap="4.94" count="1"/>
+        <line num="410" type="stmt" count="1"/>
+        <line num="411" type="stmt" count="0"/>
+        <line num="412" type="stmt" count="0"/>
+        <line num="413" type="stmt" count="0"/>
+        <line num="416" type="stmt" count="1"/>
+        <metrics loc="417" ncloc="192" classes="1" methods="10" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="78" coveredstatements="21" elements="88" coveredelements="23"/>
+      </file>
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Listener/SyncFactory.php">
+        <class name="SyncFactory" namespace="Zf2DoctrineElasticsearchSync\Listener" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="0" elements="6" coveredelements="0"/>
+        </class>
+        <line num="23" type="method" name="createService" crap="2" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <metrics loc="32" ncloc="18" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="0" elements="6" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="Zf2DoctrineElasticsearchSync">
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Module.php">
+        <class name="Module" namespace="Zf2DoctrineElasticsearchSync" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="22" coveredelements="22"/>
+        </class>
+        <line num="31" type="method" name="getAutoloaderConfig" crap="1" count="1"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="46" type="method" name="getConfig" crap="1" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="56" type="method" name="onDispatch" crap="2" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="66" type="stmt" count="1"/>
+        <line num="67" type="stmt" count="1"/>
+        <line num="69" type="stmt" count="1"/>
+        <line num="76" type="method" name="onBootstrap" crap="4" count="3"/>
+        <line num="78" type="stmt" count="3"/>
+        <line num="80" type="stmt" count="3"/>
+        <line num="81" type="stmt" count="3"/>
+        <line num="83" type="stmt" count="3"/>
+        <line num="85" type="stmt" count="1"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="89" type="stmt" count="3"/>
+        <metrics loc="90" ncloc="60" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="22" coveredelements="22"/>
+      </file>
+    </package>
+    <package name="Zf2DoctrineElasticsearchSync\Option">
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Option/Entity.php">
+        <class name="Entity" namespace="Zf2DoctrineElasticsearchSync\Option">
+          <metrics methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="42" coveredstatements="0" elements="52" coveredelements="0"/>
+        </class>
+        <line num="25" type="method" name="getIndex" crap="2" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="35" type="method" name="setIndex" crap="2" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <line num="37" type="stmt" count="0"/>
+        <line num="38" type="stmt" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="46" type="method" name="getType" crap="2" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="56" type="method" name="setType" crap="2" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="67" type="method" name="getFields" crap="2" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <line num="77" type="method" name="setFields" crap="6" count="0"/>
+        <line num="78" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="80" type="stmt" count="0"/>
+        <line num="81" type="stmt" count="0"/>
+        <line num="82" type="stmt" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="91" type="method" name="hasField" crap="6" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="95" type="stmt" count="0"/>
+        <line num="96" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="105" type="method" name="getField" crap="6" count="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <line num="107" type="stmt" count="0"/>
+        <line num="108" type="stmt" count="0"/>
+        <line num="109" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="118" type="method" name="getAlias" crap="2" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="128" type="method" name="setAlias" crap="2" count="0"/>
+        <line num="129" type="stmt" count="0"/>
+        <line num="130" type="stmt" count="0"/>
+        <line num="131" type="stmt" count="0"/>
+        <line num="132" type="stmt" count="0"/>
+        <metrics loc="132" ncloc="76" classes="1" methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="42" coveredstatements="0" elements="52" coveredelements="0"/>
+      </file>
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Option/Field.php">
+        <class name="Field" namespace="Zf2DoctrineElasticsearchSync\Option">
+          <metrics methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="0" elements="18" coveredelements="0"/>
+        </class>
+        <line num="19" type="method" name="getMapping" crap="2" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="29" type="method" name="setMapping" crap="2" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <line num="43" type="method" name="getIndexing" crap="2" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="45" type="stmt" count="0"/>
+        <line num="46" type="stmt" count="0"/>
+        <line num="53" type="method" name="setIndexing" crap="2" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <line num="56" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <metrics loc="57" ncloc="29" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="0" elements="18" coveredelements="0"/>
+      </file>
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Option/Indexing.php">
+        <class name="Indexing" namespace="Zf2DoctrineElasticsearchSync\Option">
+          <metrics methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="9" coveredelements="0"/>
+        </class>
+        <line num="16" type="method" name="getAttribute" crap="2" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <line num="18" type="stmt" count="0"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="26" type="method" name="setAttribute" crap="2" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <metrics loc="32" ncloc="21" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="9" coveredelements="0"/>
+      </file>
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Option/Mapping.php">
+        <class name="Mapping" namespace="Zf2DoctrineElasticsearchSync\Option">
+          <metrics methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="0" elements="18" coveredelements="0"/>
+        </class>
+        <line num="19" type="method" name="getParameters" crap="2" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="29" type="method" name="setParameters" crap="2" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="40" type="method" name="getType" crap="2" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="50" type="method" name="setType" crap="2" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <line num="52" type="stmt" count="0"/>
+        <line num="53" type="stmt" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <metrics loc="54" ncloc="32" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="0" elements="18" coveredelements="0"/>
+      </file>
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Option/Sync.php">
+        <class name="Sync" namespace="Zf2DoctrineElasticsearchSync\Option" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="3" elements="14" coveredelements="4"/>
+        </class>
+        <line num="22" type="method" name="getEntities" crap="1" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <line num="32" type="method" name="setEntities" crap="6" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="37" type="stmt" count="0"/>
+        <line num="46" type="method" name="hasEntity" crap="3.33" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="60" type="method" name="getEntity" crap="6" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="63" type="stmt" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <metrics loc="66" ncloc="37" classes="1" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="3" elements="14" coveredelements="4"/>
+      </file>
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Option/SyncFactory.php">
+        <class name="SyncFactory" namespace="Zf2DoctrineElasticsearchSync\Option" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="8" coveredelements="0"/>
+        </class>
+        <line num="21" type="method" name="createService" crap="6" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <metrics loc="30" ncloc="18" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="8" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="Zf2DoctrineElasticsearchSync\Service">
+      <file name="C:\nginx\www\ZendSkeletonApplication\vendor\fabiankoestring\zf2-doctrine-elasticsearch-sync\src\Zf2DoctrineElasticsearchSync/Service/ElasticsearchFactory.php">
+        <class name="ElasticsearchFactory" namespace="Zf2DoctrineElasticsearchSync\Service" fullPackage="Zf2DoctrineElasticsearchSync" package="Zf2DoctrineElasticsearchSync">
+          <metrics methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
+        </class>
+        <line num="21" type="method" name="createService" crap="2" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <metrics loc="25" ncloc="13" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
+      </file>
+    </package>
+    <metrics files="13" loc="983" ncloc="521" classes="12" methods="42" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="201" coveredstatements="42" elements="243" coveredelements="49"/>
+  </project>
+</coverage>

@@ -4,6 +4,7 @@ namespace Zf2DoctrineElasticsearchSyncTest\Listener;
 use PHPUnit_Framework_TestCase;
 use Zend\EventManager\EventManager;
 use Zf2DoctrineElasticsearchSync\Listener;
+use Zf2DoctrineElasticsearchSync\Option;
 use Zf2DoctrineElasticsearchSyncTest\Entity;
 use Zend\Config;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -25,16 +26,8 @@ class SyncTest extends PHPUnit_Framework_TestCase
      */
     public function testOnFlushWithNoSyncedMatch()
     {
-        $config = new Config\Config(
-            [
-                'Zf2DoctrineElasticsearchSyncTest\Entity\Test' => [
-                    'index' => 'index',
-                    'type'  => 'type'
-                ]
-            ]
-        );
         $elasticsearchClient = $this->getMock(Elasticsearch\Client::class, [], [], '', false);
-        $sync = new Listener\Sync($config, $elasticsearchClient);
+        $sync = new Listener\Sync(new Option\Sync([]), $elasticsearchClient);
 
         $unitOfWork = $this->getMock(
             UnitOfWork::class,
