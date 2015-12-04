@@ -80,6 +80,7 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Bo
             $serviceManager = $event->getApplication()->getServiceManager();
             $config = $serviceManager->get('Config');
 
+            /** @todo - check if if required */
             if (isset($config['zf2-doctrine-elasticsearch-sync']) && !empty($config['zf2-doctrine-elasticsearch-sync'])) {
                 /** @var EventManager $eventManager */
                 $eventManager = $event->getTarget()->getEventManager();

@@ -85,6 +85,7 @@ class Entity extends AbstractOptions
                 $this->fields[$fieldName] = new Field\Field($fieldOptions);
             }
         }
+
         return $this;
     }
 

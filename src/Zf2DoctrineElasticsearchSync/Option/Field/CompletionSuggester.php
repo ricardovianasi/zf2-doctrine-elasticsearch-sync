@@ -1,5 +1,6 @@
 <?php
 namespace Zf2DoctrineElasticsearchSync\Option\Field;
+use Zf2DoctrineElasticsearchSync\Option;
 
 /**
  * Class CompletionSuggester
@@ -10,22 +11,18 @@ namespace Zf2DoctrineElasticsearchSync\Option\Field;
 class CompletionSuggester extends Field
 {
     /**
-     * @param Mapping $mapping
-     *
-     * @return Field
+     * @inheritDoc
      */
-    public function setMapping($mapping)
+    public function setMapping(array $mapping)
     {
         $this->mapping = new Option\Mapping\CompletionSuggester($mapping);
         return $this;
     }
 
     /**
-     * @param Indexing $indexing
-     *
-     * @return Indexing
+     * @inheritDoc
      */
-    public function setIndexing($indexing)
+    public function setIndexing(array $indexing)
     {
         $this->indexing = new Option\Indexing\CompletionSuggester($indexing);
         return $this;

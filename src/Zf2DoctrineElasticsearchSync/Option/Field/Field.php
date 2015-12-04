@@ -15,33 +15,23 @@ class Field extends AbstractOptions
     /** @var Option\Indexing\Field */
     protected $indexing;
 
-    /**
-     * Field constructor.
-     *
-     * @param array|null|\Traversable $options
-     */
-    public function __construct($options)
-    {
-        $this->mapping = new Option\Mapping\Field();
-        $this->indexing = new Option\Indexing\Field();
-    }
 
     /**
      * Getter für Attribut mapping
      *
      * @return Option\Mapping\Field
      */
-    public function getMapping() :Option\Mapping\Field
+    public function getMapping()
     {
         return $this->mapping;
     }
 
     /**
-     * @param Option\Mapping\Field $mapping
+     * @param array $mapping
      *
      * @return Field
      */
-    public function setMapping(Option\Mapping\Field $mapping)
+    public function setMapping(array $mapping)
     {
         $this->mapping = new Option\Mapping\Field($mapping);
         return $this;
@@ -52,17 +42,17 @@ class Field extends AbstractOptions
      *
      * @return Option\Indexing\Field
      */
-    public function getIndexing() :Option\Indexing\Field
+    public function getIndexing()
     {
         return $this->indexing;
     }
 
     /**
-     * @param Indexing $indexing
+     * @param array $indexing
      *
      * @return Field
      */
-    public function setIndexing(Option\Indexing\Field $indexing)
+    public function setIndexing(array $indexing)
     {
         $this->indexing = new Option\Indexing\Field($indexing);
         return $this;
