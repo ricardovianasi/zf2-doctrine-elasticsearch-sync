@@ -77,7 +77,13 @@ class Entity extends AbstractOptions
     public function setFields($fields)
     {
         foreach ($fields as $fieldName => $fieldOptions) {
-            $this->fields[$fieldName] = new Field($fieldOptions);
+            if (isset($fieldOptions['type'])) {
+                if ($fieldOptions['type'] == Field\CompletionSuggester::class) {
+                    $this->fields[$fieldName] = new Field\CompletionSuggester($fieldOptions);
+                }
+            } else {
+                $this->fields[$fieldName] = new Field\Field($fieldOptions);
+            }
         }
         return $this;
     }

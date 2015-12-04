@@ -53,7 +53,7 @@ class EntityTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('test-type-1', $options->getType());
         $this->assertEquals('test-index-1', $options->getIndex());
         foreach ($options->getFields() as $field) {
-            $this->assertInstanceOf(Option\Field::class, $field);
+            $this->assertInstanceOf(Option\Field\Field::class, $field);
         }
     }
 
@@ -123,7 +123,7 @@ class EntityTest extends PHPUnit_Framework_TestCase
             ]
         );
         $this->assertNull($options->getField('test-field-3'));
-        $this->assertInstanceOf(Option\Field::class, $options->getField('test-field-1'));
-        $this->assertInstanceOf(Option\Field::class, $options->getField('test-field-2'));
+        $this->assertInstanceOf(Option\Field\Field::class, $options->getField('test-field-1'));
+        $this->assertInstanceOf(Option\Field\Field::class, $options->getField('test-field-2'));
     }
 }

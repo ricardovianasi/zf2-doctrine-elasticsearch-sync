@@ -1,5 +1,5 @@
 <?php
-namespace Zf2DoctrineElasticsearchSyncTest\Option;
+namespace Zf2DoctrineElasticsearchSyncTest\Option\Field;
 
 use PHPUnit_Framework_TestCase;
 use Zf2DoctrineElasticsearchSync\Option;
@@ -12,9 +12,9 @@ class FieldTest extends PHPUnit_Framework_TestCase
      */
     public function testNullWithoutConfig()
     {
-        $options = new Option\Field();
-        $this->assertNull($options->getIndexing());
-        $this->assertNull($options->getMapping());
+        $options = new Option\Field\Field([]);
+        $this->assertInstanceOf(Option\Indexing\Field::class, $options->getIndexing());
+        $this->assertInstanceOf(Option\Mapping\Field::class, $options->getMapping());
     }
 
     /**
@@ -22,7 +22,7 @@ class FieldTest extends PHPUnit_Framework_TestCase
      */
     public function testFieldSetWithConfig()
     {
-        $options = new Option\Field(
+        $options = new Option\Field\Field(
             [
                 'mapping'  => [
                     'type' => 'string'

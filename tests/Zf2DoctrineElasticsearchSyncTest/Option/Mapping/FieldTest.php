@@ -1,20 +1,20 @@
 <?php
-namespace Zf2DoctrineElasticsearchSyncTest\Option;
+namespace Zf2DoctrineElasticsearchSyncTest\Option\Mapping;
 
 use PHPUnit_Framework_TestCase;
 use Zf2DoctrineElasticsearchSync\Option;
 use Zf2DoctrineElasticsearchSyncTest\Entity;
 
-class MappingTest extends PHPUnit_Framework_TestCase
+class FieldTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author Fabian Köstring
      */
     public function testNullWithoutConfig()
     {
-        $options = new Option\Mapping();
-        $this->assertNull($options->getType());
-        $this->assertNull($options->getParameters());
+        $options = new Option\Mapping\Field();
+        $this->assertEmpty($options->getType());
+        $this->assertEmpty($options->getParameters());
     }
 
     /**
@@ -22,7 +22,7 @@ class MappingTest extends PHPUnit_Framework_TestCase
      */
     public function testEntitiesSetWithConfig()
     {
-        $options = new Option\Mapping(
+        $options = new Option\Mapping\Field(
             [
                 'type'       => 'string',
                 'parameters' => [

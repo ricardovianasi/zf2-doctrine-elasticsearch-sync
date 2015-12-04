@@ -1,22 +1,28 @@
 <?php
-namespace Zf2DoctrineElasticsearchSync\Option;
+namespace Zf2DoctrineElasticsearchSync\Option\Mapping;
 
 use Zend\Stdlib\AbstractOptions;
 
-class Mapping extends AbstractOptions
+/**
+ * Class Field
+ *
+ * @package Zf2DoctrineElasticsearchSync\Option\Mapping
+ * @author  Fabian Köstring
+ */
+class Field extends AbstractOptions
 {
     /** @var  String $type */
-    private $type;
+    protected $type = "";
 
     /** @var array $parameters */
-    private $parameters;
+    private $parameters = [];
 
     /**
      * Getter für Attribut parameters
      *
      * @return array
      */
-    public function getParameters()
+    public function getParameters() :array
     {
         return $this->parameters;
     }
@@ -26,7 +32,7 @@ class Mapping extends AbstractOptions
      *
      * @return Mapping
      */
-    public function setParameters($parameters)
+    public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
         return $this;
@@ -37,7 +43,7 @@ class Mapping extends AbstractOptions
      *
      * @return String
      */
-    public function getType()
+    public function getType() :string
     {
         return $this->type;
     }
@@ -47,7 +53,7 @@ class Mapping extends AbstractOptions
      *
      * @return Mapping
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         $this->type = $type;
         return $this;

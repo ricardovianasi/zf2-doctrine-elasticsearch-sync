@@ -1,19 +1,19 @@
 <?php
-namespace Zf2DoctrineElasticsearchSyncTest\Option;
+namespace Zf2DoctrineElasticsearchSyncTest\Option\Indexing;
 
 use PHPUnit_Framework_TestCase;
 use Zf2DoctrineElasticsearchSync\Option;
 use Zf2DoctrineElasticsearchSyncTest\Entity;
 
-class IndexingTest extends PHPUnit_Framework_TestCase
+class FieldTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author Fabian Köstring
      */
     public function testNullWithoutConfig()
     {
-        $options = new Option\Indexing();
-        $this->assertNull($options->getAttribute());
+        $options = new Option\Indexing\Field();
+        $this->assertEmpty($options->getCallable());
     }
 
     /**
@@ -21,11 +21,11 @@ class IndexingTest extends PHPUnit_Framework_TestCase
      */
     public function testIndexingSetWithConfig()
     {
-        $options = new Option\Indexing(
+        $options = new Option\Indexing\Field(
             [
-                'attribute' => 'test'
+                'callable' => 'getTest'
             ]
         );
-        $this->assertEquals('test', $options->getAttribute());
+        $this->assertEquals('getTest', $options->getCallable());
     }
 }

@@ -198,6 +198,78 @@ class Sync
         foreach ($entityOptions->getFields() as $property => $entityOption) {
             if ($entityOption->getIndexing()) {
                 $indexing = $entityOption->getIndexing();
+                $body[$property] = $indexing->getElasticsearchConfig($entity);
+
+                //var_dump($indexing->getElasticsearchConfig($entity));
+
+
+
+
+                /*
+                if (is_null($indexing->getCallable()) && is_null($indexing->getAttribute())) {
+                    throw new Exception\InvalidArgumentException(
+                        sprintf(
+                            '%s: Property "%s" in entity of type "%s" must have one indexing option. Please define a callable OR an attribute."',
+                            __METHOD__,
+                            $property,
+                            get_class($entity)
+                        )
+                    );
+                }
+
+                if ($indexing->getCallable() && $indexing->getAttribute()) {
+                    throw new Exception\InvalidArgumentException(
+                        sprintf(
+                            '%s: Property "%s" in entity of type "%s" should have only one indexing option. Please define a callable OR an attribute."',
+                            __METHOD__,
+                            $property,
+                            get_class($entity)
+                        )
+                    );
+                }
+
+                if (!is_null($indexing->getCallable())) {
+                    if (method_exists($entity, $method = ($indexing->getCallable()))) {
+                        if ($property == 'id') {
+                            $id = $entity->$method();
+                        } else {
+                            $body[$property] = $entity->$method();
+                        }
+                    } else {
+                        throw new Exception\InvalidArgumentException(
+                            sprintf(
+                                '%s: Defined callable in entity "%s" for property "%s" could not be found."',
+                                __METHOD__,
+                                get_class($entity),
+                                $property
+                            )
+                        );
+                    }
+                }
+
+                if (!is_null($indexing->getAttribute())) {
+                    if (method_exists($entity, $method = ('get' . ucfirst($indexing->getAttribute())))) {
+                        if ($property == 'id') {
+                            $id = $entity->$method();
+                        } else {
+                            $body[$property] = $entity->$method();
+                        }
+                    } else {
+                        throw new Exception\InvalidArgumentException(
+                            sprintf(
+                                '%s: Defined attribute in entity "%s" for property "%s" could not be found."',
+                                __METHOD__,
+                                get_class($entity),
+                                $property
+                            )
+                        );
+                    }
+                }
+                */
+                /*
+                die();
+
+
                 if (method_exists($entity, $method = ('get' . ucfirst($indexing->getAttribute())))) {
                     if ($property == 'id') {
                         $id = $entity->$method();
@@ -214,6 +286,7 @@ class Sync
                         )
                     );
                 }
+                */
             }
         }
 
@@ -222,6 +295,11 @@ class Sync
             'type'  => $entityOptions->getType(),
             'body'  => $body
         ];
+
+        echo "<pre>";
+        print_r($params);
+        echo "</pre>";
+        //die();
 
         if (!is_null($id)) {
             $params['id'] = $id;
